@@ -1,12 +1,10 @@
 import { Router } from 'express'
 import { createPet, deletePetById, getPetById, listPets, updatePetById } from '../controllers/petsController'
 
-const router = Router({mergeParams: true})
+export const petsRouter = Router()
+.get('/pets', listPets)
+.post('/pets', createPet)
+.get('/pets/:petId(\\d+)', getPetById)
+.delete('/pets/:petId(\\d+)', deletePetById)
+.put('/pets/:petId(\\d+)', updatePetById)
 
-router.get('/pets', listPets)
-router.get('/pets/:petId', getPetById)
-router.post('/pets', createPet)
-router.delete('/pets/:petId', deletePetById)
-router.put('/pets/:petId', updatePetById)
-
-export default router
