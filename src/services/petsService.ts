@@ -1,59 +1,44 @@
-import { Pet } from "../models/pet";
+import { z } from "zod";
+import Pet from "../models/pet";
 
-const pets: Pet[] = [
-    {
-        id: 1,
-        name: 'Rex',
-        age: 2,
-        breed: 'Labrador',
-        color: 'Brown',
-        gender: 'Male',
-    },
-    {
-        id: 2,
-        name: 'Sparky',
-        age: 5,
-        breed: 'Golden Retrivier',
-        color: 'Golden',
-        gender: 'Male',
-    },
-    {
-        id: 3,
-        name: 'Frederico',
-        age: 16,
-        breed: 'Poddle',
-        color: 'Gray',
-        gender: 'Male',
-    }
-]
-
-const notFound = new Error('Pet not found')
+const notFound = new Error("Pet not found");
 
 export class PetsService {
-    async getPets(): Promise<Pet[]>{
-        return pets
-    }
+  petRequest = z.object({
+    animal: z.string().min(3).max(50),
+    name: z.string().min(2).max(50),
+    age: z.optional(z.number().int().min(0)),
+    breed: z.optional(z.string().max(25)),
+    color: z.optional(z.string().max(25)),
+    gender: z.optional(z.string().max(25)),
+  });
 
-    async getPet(id:number): Promise<Pet | undefined>{
-        const pet = pets.find((pet) => pet.id === id)
-        if (pet === null) throw notFound
-        return pet
-    }
+  async getPets(): Promise<Pet[]> {
+    return await Pet.findAll();
+  }
 
-    async createPet(pet: Pet): Promise<Pet>{
-        pets.push(pet)
-        return pet
-    }
+  async getPet(id: number): Promise<Pet | undefined> {
+    const pet = await Pet.findByPk(id);
+    if (pet === null) throw notFound;
+    return pet;
+  }
 
-    async updatePet(id:number, pet: Pet): Promise<void>{
-        const index = pets.findIndex((pet) => pet.id === id)
-        if (index < 0) throw notFound
-        pets[index] = pet
-    }
+  async createPet(pet: Pet): Promise<Pet> {
+    this.petRequest.parse(pet);
+    const createdPet = await Pet.create({ ...pet });
+    return createdPet;
+  }
 
-    async deletePetById(id:number): Promise<void>{
-        const index = pets.findIndex((pet) => pet.id === id)
-        if (index < 0) throw notFound
-        pets.splice(index, 1)
-    }
+  async updatePet(id: number, pet: Pet): Promise<void> {
+    this.petRequest.parse(pet);
+    const dontExists = (await Pet.findByPk(id)) === null;
+    if (dontExists) throw notFound;
+    await Pet.update({ ...pet }, { where: { id } });
+  }
+
+  async deletePetById(id: number): Promise<void> {
+    const dontExists = (await Pet.findByPk(id)) === null;
+    if (dontExists) throw notFound;
+    await Pet.destroy({ where: { id } });
+  }
 }
