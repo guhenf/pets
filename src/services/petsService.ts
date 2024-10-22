@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { NotFoundError } from "../models/exceptions";
 import Pet from "../models/pet";
 
-const notFound = new Error("Pet not found");
+const notFound = new NotFoundError("Pet not found");
 
 export class PetsService {
   petRequest = z.object({
@@ -13,7 +14,7 @@ export class PetsService {
     gender: z.optional(z.string().max(25)),
   });
 
-  async getPets(): Promise<Pet[]> {
+  async fetchPets(): Promise<Pet[]> {
     return await Pet.findAll();
   }
 
@@ -36,7 +37,7 @@ export class PetsService {
     await Pet.update({ ...pet }, { where: { id } });
   }
 
-  async deletePetById(id: number): Promise<void> {
+  async deletePet(id: number): Promise<void> {
     const dontExists = (await Pet.findByPk(id)) === null;
     if (dontExists) throw notFound;
     await Pet.destroy({ where: { id } });

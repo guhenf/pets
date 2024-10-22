@@ -1,10 +1,12 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import { NotFoundError } from "../models/exceptions";
 import { ZodError } from "zod";
 import { ValidationError } from "sequelize";
-import { NotFoundError } from "../models/exception";
+
+export type HandledError = ZodError | NotFoundError | ValidationError | Error;
 
 export const errorHandler = (
-  err: ErrorRequestHandler,
+  err: HandledError,
   req: Request,
   res: Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
