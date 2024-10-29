@@ -13,10 +13,6 @@ class Pet extends Model {
 Pet.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true },
-<<<<<<< HEAD
-    animal: { type: DataTypes.STRING(50), allowNull: false },
-=======
->>>>>>> deb59248787b942313a215a567459c13b645ca43
     name: { type: DataTypes.STRING(50), allowNull: false },
     age: { type: DataTypes.INTEGER, allowNull: true },
     breed: { type: DataTypes.STRING(25), allowNull: true },

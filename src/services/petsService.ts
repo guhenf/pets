@@ -6,12 +6,7 @@ const notFound = new NotFoundError("Pet not found");
 
 export class PetsService {
   petRequest = z.object({
-<<<<<<< HEAD
-    animal: z.string().min(3).max(50),
-    name: z.string().min(2).max(50),
-=======
     name: z.string().min(3).max(50),
->>>>>>> deb59248787b942313a215a567459c13b645ca43
     age: z.optional(z.number().int().min(0)),
     breed: z.optional(z.string().max(25)),
     color: z.optional(z.string().max(25)),
