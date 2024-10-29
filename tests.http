@@ -10,8 +10,7 @@ POST http://localhost:3000/pets
 content-type: application/json
 
 {
-  "id": 2,
-  "animal": "Dog",
+  "id": 5,
   "name": "Princess",
   "age": 2,
   "breed": "Golden Retriever",
@@ -21,12 +20,11 @@ content-type: application/json
 
 ###
 
-PUT http://localhost:3000/pets/5
+PUT http://localhost:3000/pets/3
 content-type: application/json
 
 {
   "id": 3,
-  "animal": "Cat",
   "name": "Princess",
   "age": 3,
   "breed": "Golden Retriever",
@@ -36,4 +34,4 @@ content-type: application/json
 
 ### 
 
-DELETE http://localhost:3000/pets/5
+DELETE http://localhost:3000/pets/3
