@@ -2,6 +2,33 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 import bcrypt from "bcrypt"
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated id of the user
+ *         name:
+ *           type: string
+ *           description: The name of the user
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: The email of the user (must be unique)
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: The user's password (will be encrypted)
+ */
+
 class User extends Model {
   declare id: number;
   declare name: string;
