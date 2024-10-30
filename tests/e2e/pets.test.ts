@@ -67,5 +67,57 @@ describe("Pets API", () => {
     });
   });
 
-  //   // Add more test cases for POST, GET by ID, PUT, and DELETE endpoints
+  describe("DELETE /pets", () => {
+    it("should delete pet", async () => {
+      await Pet.create({ name: "Fluffy", age: 2, id: 1 });
+
+      const res = await request(testApp).delete("/pets/1");
+      expect(res.status).toBe(204);
+      expect(res.body).toEqual({});
+    });
+
+    it("should bad request to delete nos-existent pet", async () => {
+      await Pet.create({ name: "Fluffy", age: 2, id: 1 });
+
+      const res = await request(testApp).delete("/pets/2");
+      expect(res.status).toBe(404);
+      expect(res.body).toEqual({ message: "Pet not found" });
+    });
+  });
+
+  describe("PUT /pets", () => {
+    it("should bad request to edit non-existent pet", async () => {
+      await Pet.create({ name: "Frederico", age: 16, id: 2 });
+
+      const res = await request(testApp)
+        .put("/pets/3")
+        .send({ name: "Frederico" });
+      expect(res.status).toBe(404);
+      expect(res.body).toEqual({ message: "Pet not found" });
+    });
+
+    it("should edit name of the pet when successful", async () => {
+      await Pet.create({ name: "Fluffy", age: 2, id: 1 });
+      await Pet.create({ name: "Fred", age: 16, id: 2 });
+
+      const res = await request(testApp)
+        .put("/pets/2")
+        .send({ name: "Frederico" });
+
+      expect(res.status).toBe(204);
+      const updatedPet = await Pet.findByPk(2);
+      expect(updatedPet?.name).toBe("Frederico");
+      // expect(res.body[1].name).toBe("Frederico");
+    });
+
+    it("should return bad request when trying to edit something that doesn't exist in pets", async () => {
+      await Pet.create({ name: "Frederico", age: 16, id: 2 });
+
+      const res = await request(testApp)
+        .put("/pets/2")
+        .send({ color: "brown" });
+      expect(res.status).toBe(400);
+      expect(res.body).toEqual({ message: "Invalid data" });
+    });
+  });
 });
